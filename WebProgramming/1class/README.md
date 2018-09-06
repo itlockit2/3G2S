@@ -4,15 +4,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>웹 페이지의 구성 요소</title>
+	<title>웹 페이지의 구성 요소</title>
 </head>
 <body>
-<h3>Elvis Presley</h3>
-<hr>
-He was an American singer and actor. In November
-1956, he made his film debut in <span>Love Me 
-Tender</span>. He is often referred to as 
-"<span>the King of Rock and Roll</span>".
+	<h3>Elvis Presley</h3>
+	<hr>
+	He was an American singer and actor. In November
+	1956, he made his film debut in
+	<span>Love Me Tender</span>. He is often referred to as 
+	"<span>the King of Rock and Roll</span>".
 </body>
 </html>
 ```
@@ -47,7 +47,7 @@ Tender</span>. He is often referred to as
 	}
 </script>
 ```
-##4. h3에 이벤트 추가, img출력부분 설정
+## 4. h3에 이벤트 추가, img출력부분 설정
 ```{.html}
 <h3 onmouseover="show()" onmouseout="hide()"> Elvis Presley</h3>
 <div><img id="fig" src=""></div>
