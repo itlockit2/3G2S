@@ -10,7 +10,7 @@
 ![](4.jpg)  
 * 이렇게 헤더와 데이터를 통틀어서 Protocol Data Unit(PDU)라고 한다.  즉 각 계층에서 전송되는 데이터 단위이다.  각각의 계층별 PDU를 따로부르는 이름이 있는데, 5~7계층은 메세지(Message), 4계층은 세그먼트 혹은 데이터 그램, 3계층의 PDU는 데이터그램 혹은 패킷, 2계층은 프레임 1계층은 신호라고 부른다.
 ![](6.jpg)  
-* 데이터는 계층을 통과하면 할 수록 앞에 계속 Header가 붙는다 하지만 Data Link 계층에서는 헤더뿐만 아니라 특이하게 뒤에 트레일러를 추가한다. 
+* 데이터는 계층을 통과하면 할 수록 앞에 계속 Header가 붙는다 하지만 Data Link 계층에서는 헤더뿐만 아니라 특이하게 뒤에 트레일러를 추가한다.  
 ![](8.jpg)  
 * PC1 에서 PC2로 데이터를 전송할때 Application Layer에서부터 Physical Layer 까지 내려가면서 데이터를 Capsulation하고 PC2에서는 Physical Layer에서부터 Application Layer까지 Decapsulation과정을 거쳐 즉 헤더를 하나씩 없애가면서 Data를 얻는다. 즉 PC1에 있는 Presentation Layer에서 캡슐화 하기 위한 Header를 PC2 Presentation Layer에서 그 정보를 처리하므로 Same-Layer Interaction 이라고 한다.
 ![](9.jpg)  
