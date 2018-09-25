@@ -39,57 +39,170 @@ public class Example_01 {
   * n: 출력을 원하는 바이트 수
 1회의 write 메소드 호출로 여러 바이트의 데이터를 한꺼번에 출력할 수 있다.  
 
-### 인접 레이어 상호작용(Adjacent-Layer Interaction)
-* OSI 모델에서는 데이터가 맨 위의 계층 응용 프로그램 계층(Application Layer)에서 만들어지고 밑의 레이어로 전송한다.  
-![](1.jpg)  
-* 이때 일어나는 레이어들 끼리의 상호작용을 인접 레이어 상호작용(Adjacent-Layer Interaction)이라고 한다.  
-![](3.jpg)  
-* 각 레이어에서는 데이터를 전송할때 각 레이어에 맞는 Header를 데이터앞에 붙이는데 이 헤더에는 각 레이어별 기능을 수행하기 위한 정보(Control Information)가 들어있다.  
-이러한 과정을 캡슐화(Capsulation)이라고 한다.  
-![](4.jpg)  
-* 이렇게 헤더와 데이터를 통틀어서 Protocol Data Unit(PDU)라고 한다.  즉 각 계층에서 전송되는 데이터 단위이다.  각각의 계층별 PDU를 따로부르는 이름이 있는데, 5~7계층은 메세지(Message), 4계층은 세그먼트 혹은 데이터 그램, 3계층의 PDU는 데이터그램 혹은 패킷, 2계층은 프레임 1계층은 신호라고 부른다.
-![](6.jpg)  
-* 데이터는 계층을 통과하면 할 수록 앞에 계속 Header가 붙는다 하지만 Data Link 계층에서는 헤더뿐만 아니라 특이하게 뒤에 트레일러를 추가한다.  
-![](8.jpg)  
-* PC1 에서 PC2로 데이터를 전송할때 Application Layer에서부터 Physical Layer 까지 내려가면서 데이터를 Capsulation하고 PC2에서는 Physical Layer에서부터 Application Layer까지 Decapsulation과정을 거쳐 즉 헤더를 하나씩 없애가면서 Data를 얻는다. 즉 PC1에 있는 Presentation Layer에서 캡슐화 하기 위한 Header를 PC2 Presentation Layer에서 그 정보를 처리하므로 Same-Layer Interaction 이라고 한다.
-![](9.jpg)  
-### OSI 7계층 각 계층별 역할
-* 7계층 Application
-  * 응용 계층으로 사용자에게 가장 가까운 계층이다. 7층에서 작동하는 응용프로그램은 사용자와 직접 상호작용 하는데 구글 크롬, 스카이프, 오피스 등의 응용프로그램이 대표적이고 HTTP나 FTP와 같은 서비스들을 제공한다.
-* 6계층 Presentation
-  * 데이터를 하나의 표현형태로 변환한다. 즉 응용프로그램 형식을 네트워크 형식으로 변환하거나 네트워크 형식을 응용프로그램 형식으로 변환한다. 그래픽 등의 확장자(JPEG, MPEG)가 여기에 해당한다.
-* 5계층 Session
-  * 컴퓨터와 서버간의 대화를 위해 세션을 만들어 준다. 즉 Port를 연결해준다고 생각하면 된다. 사용자같의 포트연결(세션)이 유효한지 확인하고 설정한다. 대표적인 프로토콜 로는 SSH,TLS가 있다.
-* 4계층 Transport
-  * 전체 메시지를 발신지 대 목적지(End to End)간 제어와 에러를 관리한다. 패킷들의 전송이 유효한지 확인하고 실패한 패킷은 다시보내는 등 신뢰성 있는 통신을 오류컴출 코드로를 이용하여 보장한다. 4계층 PDU를 세그먼트라고 하는데 여기에는 보낼 데이터의 용량과 속도 발신지 포트 목적지 포트 등이 저장되어 있다. 대표적인 프로토콜이 TCP(Transport Control Protocol)이다.
-* 3계층 Network
-  * 패킷을 발신지로부터 목적지로 전달할때 성공적이고 효과적으로 전달되도록 한다. 보스턴에 있는 컴퓨터가 캘리포니아에 있는 서버에 연결하려고 할 때 그 경로는 수백만 가지인데 이 계층에서 이 작업을 라우터가 효율적으로 처리한다. 따라서 패킷에는 패킷의 발신자 주소와 패킷의 수신자 주소 그리고 서비스 요청 정보가 들어있다. 대표적인 프로토콜은 IP(Internet Protocol)이다.
-* 2계층 Data Link
-  *  3계층에서 정보를 받아 주소와 제어정보를 Header와 Tail에 추가하고 스위치같은 장비를 통해 MAC주소를 이용하여 한 장치에서 다른 장치로 Frame을 전달한다. 즉 노드 대 노드 전달을 감독한다.
-* 1계층 Physical
-  * 케이블이나 연결 장치 등과 같은 기본적인 물리적 연결을 이용하여 두 노드를 물리적으로 연결하는 단계이다. 시스템의 전기적, 물리적 표현을 나타낸다.
+write(byte[]) 예
+``` import java.io.*;
+public class Example_06 {
+	public static void main(String[] args) throws Exception{
+		byte[] b = new byte[26];
+		// 다음 라인은 배열을 65, 66, …, 91로 채운다
+		for (int i = 0; i < 26; i++) b[i] = (byte)(i+65);
+		// 파일에 배열을 출력한다
+		FileOutputStream fos = new FileOutputStream("file03.dat");
+		fos.write(b); // write 메소드 한 번 호출
+		fos.close();
+	}
+}
+```
+출력결과
+* ABCDEFGHUJKLMNOPQRSTUVWXYZ
 
-## TCP/IP 모델
-### TCP/IP 모델에서의 캡슐화
-* 4계층 Application 
-  * 응용 계층으로 L7H가 붙는게 아니라 HTTP나 FTP같은 헤더가 붙는다. 
-  * OSI 7계층 모델에서 7~5 계층에 해당하는 일을 한다.
+파일 스트림과 파일과의 관계
+* 파일 스트림 객체를 생성할 때 파일이 오픈된다.
+* 출력의 경우 이미 있던 내용은 전부 지워지고 새로이 생성 된다.
+* 오픈후 write() 메소드를 호출하지 않으면 내용이 없이 빈파일이 생성된다.
+* 오픈후 read() 메소드를 호출하면 맨 앞 바이트부터 읽음
+* 프로그램이 종료되면 파일은 저절로 닫힘
 
-* 3계층 Transport 
-  * 헤더에 TCP나 UDP가 붙으며 이와 같은 데이터를 세그먼트라고 한다.
-  * OSI 7계층 모델에서 4계층에 해당한다.  
+## InputStream
+1바이트 자료 입력을 위한 기본 추상 클래스
+* int read() 메소드는 1바이트의 자료를 읽는다. 따라서 반환하는 결과는 0~255 범위의 수이다.
+* 반환값이 -1이면 파일 내의 모든 데이터가 다 읽혀져서 스트림의 끝(End-Of-Stream)에 도달했다는 표시이다.
 
-![](10.jpg)
+## FileInputStream
+실제로 데이터를 출력할 때는 InputStream 같은 추상클래스가 아닌 구체적인 스트림을 사용해야 한다. FileInputStream을 파일로부터 읽어 들일때 사용한다.
+```import java.io.*;
+class Example_08 {
+	public static void main(String[] args) throws IOException {
+		FileInputStream fis = new FileInputStream ("my.dat");
+		int total = 0;
+		int j = fis.read();
+		while (j != -1) {
+			total++;
+			j = fis.read();
+		}
+		System.out.println(total + " bytes");
+	}
+}
+```
+* read()문의 배치(1)
+  * 일반적인 방법
+```FileInputStream fis = new FileInputStream("myFile.txt");
+int k;
+while((k = fis.read()) != -1) {
+		System.out.print(k);
+}
+```
+  * 무한 루프 속에 포함시키는 방법
+```FileInputStream fis = new FileInputStream("myFile.txt");
+while (true) {
+		int k = fis.read();
+		if (k == -1) break;
+		System.out.print(k);
+}
+```
+  * read()문을 2개 사용
+```FileInputStream fis = new FileInputStream("myFile.txt");
+int k= fis.read();
+while(k != -1){
+		System.out.print(k);
+		k= fis.read();
+}
+```
 
-* 2계층 Internet
-  * 헤더에 IP가 붙으며 이와 같은 데이터를 패킷이라고 한다.
-  * OSI 7계층 모델에서 3계층에 해당한다.
+바이트 배열에 읽어 들이기
+* 하나의 read()문으로 여러 바이트 읽기
+  * int read(byte[] buf) // 바이트 배열 채우기
+  * int read(byte[] buf, int s, int n) // 바이트 배열 일부분 채우기
+* 반환값은 읽은 바이트 수이다. 
 
-![](11.jpg)
+바이트 배열에 읽어 들일 때 주의(1)
+* int read()는 읽을 데이터가 없으면 기다린다.
+  * 블록(block)된다. 즉 Synchronous 방식으로 동작한다.
+* int read(byte[])는 블록이 되지 않는다(즉 기다리지 않는다.)
 
-* 1계층 Newtwork
-  * 데이터에 Header와 Trailer가 붙으며 이와 같은 데이터를 Frame 이라고 한다.
-  * OSI 7계층 모델에서 2~1계층에 해당한다.
+바이트 배열에 읽어 들일 때 주의(2)
+* read(byte[]), read(byte[], int, int)는 0 ~ 255 범위의 데이터를 읽어 들이므로 -128 ~ 127 범위인 byte형 배열에 저장되는 과정에서 형변환되어 음수로 변할 수 있다.
+* 따라서 읽어들인 원래의 수를 알기 위해서는 부호 있는 byte를 부호 없는 byte로 변환해야함 
+  * int original = input[k] >= 0? input[k] : 256+input [k]; 
+  * int original = input [k] & 0xff;
 
-![](14.jpg)
+available()
+* 이 메소드를 통해 현재 얼마만큼의 바이트를 읽어 들일 수 있는가 알 수 있다.
+
+skip()
+* 데이터를 읽지 않고 그냥 지나치고 싶을 때 사용
+
+Marking과 Restting
+* mark()로 현재의 위치를 표시해 놓고 후에 reset()을 이용하여 표시된 위치로 되돌아 와서 이미 읽은 스트림을 다시 읽음
+* 모든 스트림이 Mark and Reset을 허용하는 것은 아니므로 markSupported()로 확인을 해 본 후에 사용하는 것이 좋다
+* Mark & Reset을 지원하는 대표적인 입력 스트림
+  * BufferedInputStream
+  * ByteArrayInputStream
+```import java.io.*;
+class Example_17 {
+public static void main(String[] args) throws IOException {
+FileInputStream fis = new FileInputStream ("char");
+BufferedInputStream bis = new BufferedInputStream (fis);
+
+int j;
+for(int i = 0; i < 3; i++){
+j = bis.read();
+System.out.println(j);
+}
+System.out.println("Mark here!");
+bis.mark(3);
+
+for(int i = 0; i < 5; i++){
+j = bis.read();
+System.out.println(j);
+}
+System.out.println("Reset");
+bis.reset();
+
+for(int i = 0; i < 10; i++){
+j = bis.read();
+System.out.println(j);
+}
+        }
+}
+```
+## 스트림과 다형성
+* OutputStream
+  * 자료를 어느 곳에 출력할 것인가??
+  * FileOutputSteam
+  * ByteArrayOutputStream
+  * TelnetOutputStream
+* InputStream
+  * 자료를 어느곳에 입력할 것인가?
+  * FileInputSteam
+  * ByteArrayInputStream
+  * TelnetInputStream
+
+다형성을 활용한 예제
+```import java.io.*;
+public class Example_18 { 
+	public static void main(String[] args) {
+		try {
+			InputStream is = new FileInputStream("javalogo.gif");
+			int input;
+			int count = 0;
+			input = is.read();
+			while (input != -1) {
+				System.out.print(input + " ");
+				if(count%8==7) System.out.print('\n');
+				else System.out.print('\t');
+				count++;
+				input = is.read();
+			}
+			is.close();
+			System.out.println("\nBytes read: " + count);
+		}catch (IOException e) {
+			System.out.println("Error -- " + e.toString());
+		}
+	}
+}
+```
+
+
+
 
